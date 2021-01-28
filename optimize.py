@@ -110,21 +110,21 @@ def general_optimize_iterated(compat_matrix, mps_matrix):
 #print(best)
 #best = bipartite_optimize_iterated(compat)
 #print(best)
+if __name__ == '__main__':
+	compat = np.random.rand(8, 8)
+	compat = (compat + compat.T) / 2
 
-compat = np.random.rand(8, 8)
-compat = (compat + compat.T) / 2
+	genders = [1, 1, 1, 1, 2, 2, 2, 2]
+	orientations = [2, 3, 3, 1, 1, 3, 3, 2]
+	mps = np.zeros([8, 8])
+	for i in range(8):
+		for j in range(8):
+			mps[i, j] = (genders[i] & orientations[j] > 0) and (genders[j] & orientations[i] > 0) and i != j
 
-genders = [1, 1, 1, 1, 2, 2, 2, 2]
-orientations = [2, 3, 3, 1, 1, 3, 3, 2]
-mps = np.zeros([8, 8])
-for i in range(8):
-	for j in range(8):
-		mps[i, j] = (genders[i] & orientations[j] > 0) and (genders[j] & orientations[i] > 0) and i != j
+	best = general_optimize_iterated(compat, mps)
+	print(best)
 
-best = general_optimize_iterated(compat, mps)
-print(best)
-
-best = general_optimize_iterated(compat, mps)
-print(best)
-best = general_optimize_iterated(compat, mps)
-print(best)
+	best = general_optimize_iterated(compat, mps)
+	print(best)
+	best = general_optimize_iterated(compat, mps)
+	print(best)
