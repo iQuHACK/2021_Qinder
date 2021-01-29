@@ -9,8 +9,21 @@
 	  gtag('js', new Date());
 
 	  gtag('config', 'UA-157392582-1');
-	</script>
+	</script>	
 
+	<style>
+	.column {
+	  float: left;
+	  width: 50%;
+	}
+
+	/* Clear floats after the columns */
+	.row:after {
+	  content: "";
+	  display: table;
+	  clear: both;
+	}
+	</style>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
@@ -23,44 +36,128 @@
 
   <!-- Template Main CSS File -->
   <link href="{{url_for('static', filename='assets/css/style.css')}}" rel="stylesheet">
+		<script>
 
+            var update_slider = function(i, j) {
+                var value = document.getElementById("compat[" + i + "][" + j + "]").value;
+                document.getElementById("compat[" + j + "][" + i + "]").value = value;
+                var display_str = value + " %";
+                if (value == 0) {display_str = "Invalid Pair";}
+                document.getElementById("compat_label[" + i + "][" + j + "]").innerHTML = display_str;
+                document.getElementById("compat_label[" + j + "][" + i + "]").innerHTML = display_str;
+
+            }
+
+
+			var add = function() {
+                var N = document.getElementById("compat").childElementCount - 1; 
+                var name = document.createElement("th");
+                document.getElementById("names").appendChild(name);
+                name.setAttribute("id", "name" + N);
+                var name_input = document.createElement("input");
+                name_input.name = "names[" + N + "]";
+                name_input.setAttribute("id", name_input.name);
+                name_input.onchange = update_names;
+                name_input.onkeyup = update_names;
+                name.appendChild(name_input);
+                for (var i = 0; i < N; i++) {
+                    var new_col = document.createElement("td");
+                    document.getElementById("compat" + i).appendChild(new_col);
+                    new_col.setAttribute("id", "compat" + i + "." + N);
+				    var input = document.createElement("input");
+                    input.name = "compat[" + i + "][" + N + "]";
+                    input.setAttribute("id", input.name);
+                    input.type = "range";
+                    console.log(i + " " + N);
+                    (function(x, y) { //a copy is passed, accessible as marker inside this function
+                        input.oninput = function() { update_slider(x, y); };
+                    })(i, N);
+                    new_col.appendChild(input);
+                    var label = document.createElement("p");
+                    label.setAttribute("id", "compat_label[" + i + "][" + N + "]");
+                    label.innerHTML = "50 %";
+				    new_col.appendChild(document.createElement("br"));
+                    new_col.appendChild(label);
+                }
+				var new_row = document.createElement("tr");
+				document.getElementById("compat").appendChild(new_row);
+				new_row.setAttribute("id", "compat" + N);
+                var name_mirror = document.createElement("th");
+                new_row.appendChild(name_mirror);
+                name_mirror.setAttribute("id", "names_mirror" + N);
+                var name_mirror_input = document.createElement("input");
+                name_mirror_input.name = "names_mirror[" + N + "]";
+                name_mirror_input.setAttribute("id", name_mirror_input.name);
+                name_mirror_input.disabled = true;
+                name_mirror.appendChild(name_mirror_input);
+                for (var i = 0; i <= N; i++) {
+                    var new_col = document.createElement("td");
+                    new_row.appendChild(new_col);
+                    new_col.setAttribute("id", "compat" + N + "." + i);
+                    if (i < N) {
+                        var input = document.createElement("input");
+                        input.name = "compat[" + N + "][" + i + "]";
+                        (function(x, y) { //a copy is passed, accessible as marker inside this function
+                            input.oninput = function() { update_slider(x, y); };
+                        })(N, i);
+                        input.setAttribute("id", input.name);
+                        input.type = "range";
+                        new_col.appendChild(input);
+                        var label = document.createElement("p");
+                        label.setAttribute("id", "compat_label[" + N + "][" + i + "]");
+                        label.innerHTML = "50 %";
+                        new_col.appendChild(document.createElement("br"));
+                        new_col.appendChild(label);
+                    } else {
+                        new_col.innerHTML = "N/A";
+
+                   }
+                }
+			};
+
+			var del = function() {
+				var N = document.getElementById("compat").childElementCount - 2;
+                document.getElementById("compat" + N).remove();
+                document.getElementById("name" + N).remove();
+                for (var i = 0; i < N; i++) {
+                    document.getElementById("compat" + i + "." + N).remove();
+                }
+			};
+            
+            var update_names = function() {
+				var N = document.getElementById("compat").childElementCount - 1;
+                for (var i = 0; i < N; i++) {
+                    var name = document.getElementById("names[" + i + "]").value;
+                    document.getElementById("names_mirror[" + i + "]").value = name;
+                }	
+            };
+
+			var submitForms = function(){
+				document.getElementById("male").submit();
+				document.getElementById("female").submit();
+			};
+			
+		</script>
 
         <title>Home</title>
 
     </head>
     <body>
+		<form id="form" method="Post" action="/results">
+        <table>
+          <tbody id="compat">
+            <tr id="names">
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+		<br><br>	
+		<button type="button" onclick="add();add();">Add</button>	
+		<button type="button" onclick="del();add();">Delete</button>
+		<input type="submit" value="Next">
+		</form>
 
-			<div class="container">
-				<div class="row d-flex align-items-center"">
-				<div class=" col-lg-6 py-5 py-lg-0 order-2 order-lg-1" data-aos="fade-right">
-					<img src="{{url_for('static', filename='logo.png')}}" class="img-fluid" alt="">
-					<h1>Welcome to SoniData</h1>
-					<h2>Experience next-gen data visualization with audio</h2>
-
-				</div>
-
-			</div>
-			</div>
-
-			<br>
-			<br>
-
-
-			<div class="container center">
-	<h1>Upload new File</h1>
-	    <form method=post enctype=multipart/form-data>
-		    How would you like your data to be converted to audio?<br>
-		    <input type="radio" name="type" value="pitch">Vary pitch (ND Data)<br>
-  <input type="radio" name="type" value="both">Vary pitch and volume (ND Data where N is even) <br>
-  <input type="radio" name="type" value="volume">Vary volume (ND Data) <br>
-  <br>
-  Upload a CSV with your data (each column should correspond to a different feature):<br>
-  <input type=file name=file><br><br>
-	      <input type=submit value=Play>
-	    </form>
-
-
-		</div>
+			
     </body>
 
 </html>

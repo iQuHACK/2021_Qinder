@@ -1,66 +1,42 @@
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory
+import numpy as np
 import datetime
 import os, csv, uuid
 import re
-from optimize import bipartite_optimize_iterated 
+from optimize import general_optimize_iterated 
 
 # 
 #########
 # Links #
 #########
 app = Flask(__name__)
-@app.route('/output/<path:filename>')
-def download_file(filename):
-    return send_from_directory('output', filename)
-@app.route('/playback')
-def play_wav():
-    uuid_str = request.args.get('uuid')
-    return render_template("playback.html", uuid=uuid_str)
-@app.route('/names', methods=['GET', 'POST'])
-def names():
-    return render_template("names.html") 
-@app.route('/compatibility', methods=['GET', 'POST'])
-def compat():
-    males, females = extract_names(dict(request.form))
-    return render_template("compatibility.html", males=males, females=females) 
 @app.route('/', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        type_str = request.form.get('type')
-        print(type_str)
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            uuid_str = uuid.uuid1().hex
-            filename = secure_filename(uuid_str + '.csv')
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            input_data = parse_input('uploads/' + uuid_str + '.csv')
-            output_file = 'output/' + uuid_str + '.midi'
-            write_midi(input_data, output_file, mode=type_str)
-            process_midi(output_file, play=False, output_wav='output/' + uuid_str + '.wav')
-            return redirect('/playback?uuid=' + uuid_str)
-    return render_template("home.html")
+def home():
+    return render_template("home.html") 
+@app.route('/results', methods=['GET', 'POST'])
+def results():
+    names, compat = extract_data(dict(request.form))
+    mps = np.ceil(compat)
+    best = general_optimize_iterated(compat, mps)
+    pairs = []
+    for x, y in best:
+        pairs.append((names[x], names[y]))
+    print(pairs)
+    return render_template("results.html", pairs=pairs) 
 
 
-def extract_names(form_dict):
-    N = int(len(form_dict) / 2)
-    males = [""] * N
-    females = [""] * N
+def extract_data(form_dict):
+    N = int(sum(1 for key in form_dict.keys() if key.startswith("name")))
+    names = []
+    for i in range(N):
+        names.append(form_dict["names[" + str(i) + "]"])
 
-    for key, value in form_dict.items():
-        index = int(re.search(r"\[([0-9]+)\]", key).group(1))
-        if key.startswith("female"):
-            females[index] = value
-        else:
-            males[index] = value
-    return males, females
+    compat = np.zeros([N, N])
+    for i in range(N):
+        for j in range(N):
+            if i != j:
+                compat[i, j] = int(form_dict["compat[" + str(i) + "][" + str(j) + "]"]) * 0.01
+    return names, compat
+
 if __name__ == '__main__':
     app.run(debug=True)
