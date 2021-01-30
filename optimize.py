@@ -85,7 +85,7 @@ def general_optimize(compat_matrix, mps_matrix, pairing_cost, double_pairing_cos
 def general_optimize_iterated(compat_matrix, mps_matrix):
     numruns = 1000 # Number of samples taken    
     pairing_cost = -0.1 # "cost" assigned for each pairing (should be negative)
-    double_pairing_cost = 0.6 # "cost" assigned for each person who is paired with two people (should be positive)
+    double_pairing_cost = 1 # "cost" assigned for each person who is paired with two people (should be positive)
 
     # Run sampler
     N = compat_matrix.shape[0] / 2

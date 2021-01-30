@@ -12,6 +12,10 @@
 	</script>	
 
 	<style>
+    .logo {
+        display: block;
+        width:175px;
+     }
     table {
       border-collapse: collapse;
       border-spacing: 10px;
@@ -160,7 +164,9 @@
         <table>
           <tbody id="compat">
             <tr id="names">
-              <th></th>
+              <th>
+		        <img src="{{url_for('static', filename='logo.png')}}" class="logo" alt="">
+              </th>
             </tr>
           </tbody>
         </table>
