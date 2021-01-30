@@ -12,9 +12,21 @@
 	</script>	
 
 	<style>
+    table {
+      border-collapse: collapse;
+      border-spacing: 10px;
+
+    }
+    th {
+      padding: 10px;
+    }
+    td {
+      border: 1px solid gray;
+      padding: 10px;
+    }
 	.column {
 	  float: left;
-	  width: 50%;
+	  width: 33%;
 	}
 
 	/* Clear floats after the columns */
@@ -41,7 +53,7 @@
             var update_slider = function(i, j) {
                 var value = document.getElementById("compat[" + i + "][" + j + "]").value;
                 document.getElementById("compat[" + j + "][" + i + "]").value = value;
-                var display_str = value + " %";
+                var display_str = value + " % Compatible";
                 if (value == 0) {display_str = "Invalid Pair";}
                 document.getElementById("compat_label[" + i + "][" + j + "]").innerHTML = display_str;
                 document.getElementById("compat_label[" + j + "][" + i + "]").innerHTML = display_str;
@@ -55,6 +67,7 @@
                 document.getElementById("names").appendChild(name);
                 name.setAttribute("id", "name" + N);
                 var name_input = document.createElement("input");
+                name_input.placeholder = "Enter name..."
                 name_input.name = "names[" + N + "]";
                 name_input.setAttribute("id", name_input.name);
                 name_input.onchange = update_names;
@@ -75,7 +88,7 @@
                     new_col.appendChild(input);
                     var label = document.createElement("p");
                     label.setAttribute("id", "compat_label[" + i + "][" + N + "]");
-                    label.innerHTML = "50 %";
+                    label.innerHTML = "50 % Compatible";
 				    new_col.appendChild(document.createElement("br"));
                     new_col.appendChild(label);
                 }
@@ -105,7 +118,7 @@
                         new_col.appendChild(input);
                         var label = document.createElement("p");
                         label.setAttribute("id", "compat_label[" + N + "][" + i + "]");
-                        label.innerHTML = "50 %";
+                        label.innerHTML = "50 % Compatible";
                         new_col.appendChild(document.createElement("br"));
                         new_col.appendChild(label);
                     } else {
@@ -136,7 +149,7 @@
 				document.getElementById("male").submit();
 				document.getElementById("female").submit();
 			};
-			
+		    window.onload = function() { add(); add(); };	
 		</script>
 
         <title>Home</title>
@@ -147,14 +160,14 @@
         <table>
           <tbody id="compat">
             <tr id="names">
-              <td></td>
+              <th></th>
             </tr>
           </tbody>
         </table>
-		<br><br>	
-		<button type="button" onclick="add();add();">Add</button>	
-		<button type="button" onclick="del();add();">Delete</button>
-		<input type="submit" value="Next">
+		<br><br>
+        <div class="column"><button type="button" onclick="add();add();">Add Rows</button></div>	
+		<div class="column"><button type="button" onclick="del();del();">Delete Rows</button></div>
+		<div class="column"><input type="submit" value="Find Matches"></div>
 		</form>
 
 			

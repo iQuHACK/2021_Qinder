@@ -8,6 +8,9 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+form {
+    width:100%
+}
 body {
   font-family: "Open Sans", sans-serif;
   color: #444444;
@@ -35,12 +38,8 @@ form {
     display: inline-block;
 }
 
-input:hover{
-  color:blue;
-}
-
-input[type=submit] {
-    width: 20em;  height: 2em;
+input[type=submit], button {
+    width: 75%;  height: 2em;
     font-size: large;
     border-radius: 8px;
     font-family: "Open Sans", sans-serif;
@@ -49,7 +48,7 @@ input[type=submit] {
 
 }
 
-input[type=submit]:hover{
+input[type=submit]:hover, button:hover {
   transform: scale(1.2);
 }
 
