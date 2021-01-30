@@ -1,0 +1,45 @@
+h1{
+   text-align: center;
+}
+.imageContainer {
+   margin-left:36%;
+   display: inline-block;
+   position: relative;
+   text-align: center;
+   color: rgb(64, 11, 124);
+}
+.caption{
+   font-size: 25px;
+   font-weight: bolder;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.BL {
+   position: absolute;
+   bottom: 8px;
+   left: 16px;
+}
+.TL{
+   position: absolute;
+   top: 8px;
+   left: 16px;
+}
+.TR {
+   position: absolute;
+   top: 8px;
+   right: 16px;
+}
+.BR {
+   position: absolute;
+   bottom: 8px;
+   right: 16px;
+}
+.center {
+   position: absolute;
+   top: 50%;
+   left: 30%;
+   transform: translate(-50%, -50%);
+}
+
+.img {
+   height: 20%;
+}

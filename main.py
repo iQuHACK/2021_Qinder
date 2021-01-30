@@ -3,16 +3,16 @@ import numpy as np
 import datetime
 import os, csv, uuid
 import re
-from optimize import general_optimize_iterated 
+from optimize import general_optimize_iterated
 
-# 
+#
 #########
 # Links #
 #########
 app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html") 
+    return render_template("home.html")
 @app.route('/results', methods=['GET', 'POST'])
 def results():
     names, compat = extract_data(dict(request.form))
@@ -22,7 +22,7 @@ def results():
     for x, y in best:
         pairs.append((names[x], names[y]))
     print(pairs)
-    return render_template("results.html", pairs=pairs) 
+    return render_template("results.html", pairs=pairs)
 
 
 def extract_data(form_dict):
